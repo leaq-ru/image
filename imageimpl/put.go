@@ -3,6 +3,7 @@ package imageimpl
 import (
 	"bytes"
 	"context"
+	"errors"
 	"github.com/disintegration/imaging"
 	"github.com/google/uuid"
 	m "github.com/minio/minio-go/v7"
@@ -18,6 +19,11 @@ import (
 func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.PutResponse, err error) {
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
+
+	if req.GetUrl() == "" {
+		err = errors.New("url: cannot be blank")
+		return
+	}
 
 	client := fasthttp.Client{
 		NoDefaultUserAgentHeader: true,
@@ -50,7 +56,7 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 		return
 	}
 
-	info, err := minio.Client.PutObject(
+	object, err := minio.Client.PutObject(
 		ctx,
 		config.BucketName,
 		strings.Join([]string{uuid.New().String(), "jpg"}, "."),
@@ -62,9 +68,13 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 		logger.Log.Error().Err(err).Send()
 		return
 	}
+	if object.Location == "" {
+		err = errors.New("object.Location is empty")
+		return
+	}
 
 	res = &image.PutResponse{
-		S3Url: info.Location,
+		S3Url: object.Location,
 	}
 	return
 }
