@@ -18,25 +18,26 @@ import (
 func main() {
 	srv := grpc.NewServer()
 
-	done := make(chan struct{}, 1)
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, syscall.SIGTERM, syscall.SIGINT)
 	go func() {
 		<-signals
 		srv.GracefulStop()
-		done <- struct{}{}
 	}()
 
 	lis, err := net.Listen("tcp", strings.Join([]string{
 		"0.0.0.0",
 		config.Env.Grpc.Port,
 	}, ":"))
-	logger.Must(err)
+	if err != nil {
+		logger.Log.Error().Err(err).Send()
+		return
+	}
 
 	grpc_health_v1.RegisterHealthServer(srv, health.NewServer())
 	image.RegisterImageServer(srv, imageimpl.NewServer())
 	err = srv.Serve(lis)
-	logger.Must(err)
-
-	<-done
+	if err != nil {
+		logger.Log.Error().Err(err).Send()
+	}
 }
