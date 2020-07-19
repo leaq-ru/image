@@ -48,7 +48,7 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 		return
 	}
 
-	cropped := imaging.Fill(i, 200, 200, imaging.Center, imaging.Box)
+	cropped := imaging.Fit(i, 200, 200, imaging.Box)
 	buf := &bytes.Buffer{}
 	err = imaging.Encode(buf, cropped, imaging.JPEG)
 	if err != nil {
