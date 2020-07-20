@@ -25,6 +25,8 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 		return
 	}
 
+	log := logger.Log.With().Str("url", req.GetUrl()).Logger()
+
 	client := fasthttp.Client{
 		NoDefaultUserAgentHeader: true,
 		ReadTimeout:              10 * time.Second,
@@ -38,13 +40,13 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 	httpRes := fasthttp.AcquireResponse()
 	err = client.DoRedirects(httpReq, httpRes, 3)
 	if err != nil {
-		logger.Log.Error().Err(err).Send()
+		log.Error().Err(err).Send()
 		return
 	}
 
 	i, err := imaging.Decode(bytes.NewReader(httpRes.Body()))
 	if err != nil {
-		logger.Log.Error().Err(err).Send()
+		log.Error().Err(err).Send()
 		return
 	}
 
@@ -52,7 +54,7 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 	buf := &bytes.Buffer{}
 	err = imaging.Encode(buf, cropped, imaging.JPEG)
 	if err != nil {
-		logger.Log.Error().Err(err).Send()
+		log.Error().Err(err).Send()
 		return
 	}
 
@@ -65,7 +67,7 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 		m.PutObjectOptions{},
 	)
 	if err != nil {
-		logger.Log.Error().Err(err).Send()
+		log.Error().Err(err).Send()
 		return
 	}
 	if object.Location == "" {
