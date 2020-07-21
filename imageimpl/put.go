@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	userAgent "github.com/EDDYCJY/fake-useragent"
 	"github.com/disintegration/imaging"
 	"github.com/google/uuid"
 	m "github.com/minio/minio-go/v7"
@@ -17,7 +18,7 @@ import (
 )
 
 func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.PutResponse, err error) {
-	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
 	if req.GetUrl() == "" {
@@ -32,11 +33,12 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 		ReadTimeout:              10 * time.Second,
 		WriteTimeout:             10 * time.Second,
 		MaxConnWaitTimeout:       10 * time.Second,
-		MaxResponseBodySize:      30 * 1024 * 1024,
+		MaxResponseBodySize:      10 * 1024 * 1024,
 	}
 
 	httpReq := fasthttp.AcquireRequest()
 	httpReq.SetRequestURI(req.GetUrl())
+	httpReq.Header.SetUserAgent(userAgent.Random())
 	httpRes := fasthttp.AcquireResponse()
 	err = client.DoRedirects(httpReq, httpRes, 3)
 	if err != nil {
@@ -50,9 +52,9 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 		return
 	}
 
-	cropped := imaging.Fit(i, 200, 200, imaging.Box)
+	croppedImg := imaging.Fit(i, 200, 200, imaging.Box)
 	buf := &bytes.Buffer{}
-	err = imaging.Encode(buf, cropped, imaging.JPEG)
+	err = imaging.Encode(buf, croppedImg, imaging.JPEG)
 	if err != nil {
 		log.Error().Err(err).Send()
 		return
