@@ -21,12 +21,9 @@ func main() {
 		"0.0.0.0",
 		config.Env.Grpc.Port,
 	}, ":"))
-	if err != nil {
-		logger.Log.Error().Err(err).Send()
-		return
-	}
+	logger.Must(err)
 
 	grpc_health_v1.RegisterHealthServer(srv, health.NewServer())
 	image.RegisterImageServer(srv, imageimpl.NewServer())
-	logger.Err(srv.Serve(lis))
+	logger.Must(srv.Serve(lis))
 }
