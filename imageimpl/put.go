@@ -54,7 +54,7 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 
 	croppedImg := imaging.Fit(i, 200, 200, imaging.Box)
 	buf := &bytes.Buffer{}
-	err = imaging.Encode(buf, croppedImg, imaging.JPEG)
+	err = imaging.Encode(buf, croppedImg, imaging.PNG)
 	if err != nil {
 		log.Error().Err(err).Send()
 		return
@@ -63,7 +63,7 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 	object, err := minio.Client.PutObject(
 		ctx,
 		config.BucketName,
-		strings.Join([]string{uuid.New().String(), "jpg"}, "."),
+		strings.Join([]string{uuid.New().String(), "png"}, "."),
 		buf,
 		-1,
 		m.PutObjectOptions{},
