@@ -65,6 +65,11 @@ spec:
                 configMapKeyRef:
                   key: port
                   name: grpc
+            - name: S3_ALIAS
+              valueFrom:
+                configMapKeyRef:
+                  key: alias
+                  name: s3
             - name: S3_IMAGEBUCKETNAME
               valueFrom:
                 configMapKeyRef:

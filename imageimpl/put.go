@@ -72,13 +72,13 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 		log.Error().Err(err).Send()
 		return
 	}
-	if object.Location == "" {
-		err = errors.New("object.Location is empty")
+	if object.Key == "" {
+		err = errors.New("object.Key is empty")
 		return
 	}
 
 	res = &image.PutResponse{
-		S3Url: object.Location,
+		S3Url: strings.Join([]string{config.Env.S3.Alias, object.Key}, "/"),
 	}
 	return
 }

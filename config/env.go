@@ -15,6 +15,7 @@ type grpc struct {
 }
 
 type s3 struct {
+	Alias           string `envconfig:"S3_ALIAS"`
 	ImageBucketName string `envconfig:"S3_IMAGEBUCKETNAME"`
 	Endpoint        string `envconfig:"S3_ENDPOINT"`
 	AccessKeyID     string `envconfig:"S3_ACCESSKEYID"`
