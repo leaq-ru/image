@@ -3,7 +3,13 @@ ARG GH_CI_TOKEN=$GH_CI_TOKEN
 WORKDIR /app
 COPY / /app
 ENV GOPRIVATE="github.com/nnqq/*"
-RUN apk add --no-cache git
+
+ARG VIPS_VERSION="8.10.0"
+RUN wget https://github.com/libvips/libvips/releases/download/v${VIPS_VERSION}/vips-${VIPS_VERSION}.tar.gz
+RUN apk update && apk add git gcc musl-dev automake build-base pkgconfig glib-dev gobject-introspection libxml2-dev expat-dev jpeg-dev libwebp-dev libpng-dev
+RUN tar -xf vips-${VIPS_VERSION}.tar.gz && cd vips-${VIPS_VERSION} && ./configure && make && make install && ldconfig; exit 0
+RUN apk del automake build-base
+
 RUN git config --global url."https://nnqq:$GH_CI_TOKEN@github.com/".insteadOf "https://github.com/"
 RUN go build -o servicebin
 

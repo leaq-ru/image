@@ -5,8 +5,8 @@ import (
 	"context"
 	"errors"
 	userAgent "github.com/EDDYCJY/fake-useragent"
-	"github.com/disintegration/imaging"
 	"github.com/google/uuid"
+	"github.com/h2non/bimg"
 	m "github.com/minio/minio-go/v7"
 	"github.com/nnqq/scr-image/config"
 	"github.com/nnqq/scr-image/logger"
@@ -33,7 +33,7 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 		ReadTimeout:              10 * time.Second,
 		WriteTimeout:             10 * time.Second,
 		MaxConnWaitTimeout:       10 * time.Second,
-		MaxResponseBodySize:      10 * 1024 * 1024,
+		MaxResponseBodySize:      1024 * 1024,
 	}
 
 	httpReq := fasthttp.AcquireRequest()
@@ -46,15 +46,14 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 		return
 	}
 
-	i, err := imaging.Decode(bytes.NewReader(httpRes.Body()))
+	i, err := bimg.NewImage(httpRes.Body()).SmartCrop(200, 200)
 	if err != nil {
 		log.Error().Err(err).Send()
 		return
 	}
 
-	croppedImg := imaging.Fit(i, 200, 200, imaging.Box)
 	buf := &bytes.Buffer{}
-	err = imaging.Encode(buf, croppedImg, imaging.PNG)
+	_, err = buf.Write(i)
 	if err != nil {
 		log.Error().Err(err).Send()
 		return
@@ -65,7 +64,7 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 		config.Env.S3.ImageBucketName,
 		strings.Join([]string{uuid.New().String(), "png"}, "."),
 		buf,
-		-1,
+		int64(len(i)),
 		m.PutObjectOptions{},
 	)
 	if err != nil {
