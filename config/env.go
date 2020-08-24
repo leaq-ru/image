@@ -4,8 +4,6 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
-const BucketName = "image"
-
 type c struct {
 	Grpc     grpc
 	S3       s3
@@ -17,6 +15,7 @@ type grpc struct {
 }
 
 type s3 struct {
+	ImageBucketName string `envconfig:"S3_IMAGEBUCKETNAME"`
 	Endpoint        string `envconfig:"S3_ENDPOINT"`
 	AccessKeyID     string `envconfig:"S3_ACCESSKEYID"`
 	SecretAccessKey string `envconfig:"S3_SECRETACCESSKEY"`
