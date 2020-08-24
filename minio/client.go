@@ -54,7 +54,9 @@ func init() {
 			"Resource": ["arn:aws:s3:::%s/*"]
 		}]
 	}`, config.Env.S3.ImageBucketName))
-	logger.Must(err)
+	if err != nil && err.Error() != "200 OK" {
+		logger.Log.Panic().Err(err).Send()
+	}
 
 	Client = cl
 }
