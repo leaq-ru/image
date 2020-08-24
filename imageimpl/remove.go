@@ -9,6 +9,7 @@ import (
 	"github.com/nnqq/scr-image/minio"
 	"github.com/nnqq/scr-proto/codegen/go/image"
 	"net/url"
+	"strings"
 	"time"
 )
 
@@ -25,7 +26,7 @@ func (s *server) Remove(ctx context.Context, req *image.RemoveRequest) (res *emp
 	err = minio.Client.RemoveObject(
 		ctx,
 		config.Env.S3.ImageBucketName,
-		parsedURL.Path,
+		strings.TrimPrefix(parsedURL.Path, "/"),
 		m.RemoveObjectOptions{},
 	)
 	if err != nil {
