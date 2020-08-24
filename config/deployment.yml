@@ -19,7 +19,7 @@ metadata:
   labels:
     app: image
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: image
