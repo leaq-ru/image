@@ -27,7 +27,7 @@ func (s *server) Remove(ctx context.Context, req *image.RemoveRequest) (res *emp
 
 	err = minio.Client.RemoveObject(
 		ctx,
-		config.BucketName,
+		config.Env.S3.ImageBucketName,
 		objectName,
 		m.RemoveObjectOptions{},
 	)

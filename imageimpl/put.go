@@ -62,7 +62,7 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 
 	object, err := minio.Client.PutObject(
 		ctx,
-		config.BucketName,
+		config.Env.S3.ImageBucketName,
 		strings.Join([]string{uuid.New().String(), "png"}, "."),
 		buf,
 		-1,
