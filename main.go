@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/h2non/bimg"
 	"github.com/nnqq/scr-image/config"
 	"github.com/nnqq/scr-image/imageimpl"
 	"github.com/nnqq/scr-image/logger"
@@ -14,6 +15,9 @@ import (
 )
 
 func main() {
+	bimg.VipsCacheSetMaxMem(0)
+	bimg.VipsCacheSetMax(0)
+
 	srv := grpc.NewServer()
 	go graceful.HandleSignals(srv.GracefulStop)
 
