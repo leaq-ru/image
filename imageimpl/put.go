@@ -46,14 +46,14 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 		return
 	}
 
-	i, err := bimg.NewImage(httpRes.Body()).SmartCrop(200, 200)
+	img, err := bimg.NewImage(httpRes.Body()).SmartCrop(200, 200)
 	if err != nil {
 		log.Error().Err(err).Send()
 		return
 	}
 
 	buf := &bytes.Buffer{}
-	_, err = buf.Write(i)
+	_, err = buf.Write(img)
 	if err != nil {
 		log.Error().Err(err).Send()
 		return
@@ -64,7 +64,7 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 		config.Env.S3.ImageBucketName,
 		strings.Join([]string{uuid.New().String(), "png"}, "."),
 		buf,
-		int64(len(i)),
+		int64(len(img)),
 		m.PutObjectOptions{},
 	)
 	if err != nil {
