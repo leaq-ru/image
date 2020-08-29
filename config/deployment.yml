@@ -60,8 +60,12 @@ spec:
               name: grpc
               protocol: TCP
           resources:
+            requests:
+              cpu: 470m
+              memory: 70m
             limits:
-              memory: 300Mi
+              cpu: 940m
+              memory: 140Mi
           env:
             - name: GRPC_PORT
               valueFrom:
