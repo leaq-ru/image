@@ -16,7 +16,7 @@ spec:
       annotations:
         linkerd.io/inject: enabled
         config.linkerd.io/skip-outbound-ports: "4222"
-        config.linkerd.io/proxy-cpu-request: 1m
+        config.linkerd.io/proxy-cpu-request: 15m
     spec:
       imagePullSecrets:
         - name: regcred
@@ -48,7 +48,7 @@ spec:
               protocol: TCP
           resources:
             requests:
-              cpu: 100m
+              cpu: 500m
               memory: 70m
             limits:
               cpu: "1"
@@ -115,7 +115,7 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 500
+          averageUtilization: 100
 
 ---
 apiVersion: v1
