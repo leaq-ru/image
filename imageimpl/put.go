@@ -33,7 +33,8 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 		ReadTimeout:              10 * time.Second,
 		WriteTimeout:             10 * time.Second,
 		MaxConnWaitTimeout:       10 * time.Second,
-		MaxResponseBodySize:      1024 * 1024,
+		MaxResponseBodySize:      5 * 1024 * 1024,
+		ReadBufferSize:           5 * 1024 * 1024,
 	}
 
 	httpReq := fasthttp.AcquireRequest()
