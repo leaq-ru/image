@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
+	"github.com/minio/minio-go/v7/pkg/lifecycle"
 	"github.com/nnqq/scr-image/config"
 	"github.com/nnqq/scr-image/logger"
 	"strconv"
@@ -43,6 +44,17 @@ func init() {
 	} else {
 		logger.Log.Debug().Str("bucketName", config.Env.S3.ImageBucketName).Msg("bucket created")
 	}
+
+	err = cl.SetBucketLifecycle(ctx, config.Env.S3.ImageBucketName, &lifecycle.Configuration{
+		Rules: []lifecycle.Rule{{
+			ID:     "Remove expired multipart upload",
+			Status: "Enabled",
+			AbortIncompleteMultipartUpload: lifecycle.AbortIncompleteMultipartUpload{
+				DaysAfterInitiation: 1,
+			},
+		}},
+	})
+	logger.Must(err)
 
 	err = cl.SetBucketPolicy(ctx, config.Env.S3.ImageBucketName, fmt.Sprintf(`{
 		"Version": "2012-10-17",
