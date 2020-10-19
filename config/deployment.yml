@@ -17,9 +17,10 @@ spec:
         linkerd.io/inject: enabled
         config.linkerd.io/skip-outbound-ports: "80,443"
         config.linkerd.io/proxy-cpu-request: 1m
+        config.linkerd.io/proxy-memory-request: 11Mi
     spec:
       imagePullSecrets:
-        - name: regcred
+        - name: ghcr
       containers:
         - name: image
           image: busybox
@@ -48,8 +49,8 @@ spec:
               protocol: TCP
           resources:
             requests:
-              cpu: 110m
-              memory: 110m
+              cpu: 9m
+              memory: 111m
             limits:
               cpu: "1"
               memory: 1Gi
