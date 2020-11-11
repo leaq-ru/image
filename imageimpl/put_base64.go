@@ -32,6 +32,11 @@ func (s *server) PutBase64(ctx context.Context, req *image.PutBase64Request) (re
 		return
 	}
 
+	if len(imgBytes) > 200000 {
+		err = errors.New("maximum payload 200kb")
+		return
+	}
+
 	img, err := bimg.NewImage(imgBytes).SmartCrop(200, 200)
 	if err != nil {
 		log.Error().Err(err).Send()
