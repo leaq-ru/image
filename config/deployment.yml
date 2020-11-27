@@ -131,14 +131,3 @@ spec:
       protocol: TCP
   selector:
     app: image
-
----
-apiVersion: policy/v1beta1
-kind: PodDisruptionBudget
-metadata:
-  name: image
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: image
