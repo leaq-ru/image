@@ -17,8 +17,10 @@ import (
 	"time"
 )
 
+var ErrPutRetryable = errors.New("can't put, try later")
+
 func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.PutResponse, err error) {
-	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
 	defer cancel()
 
 	if req.GetUrl() == "" {
@@ -30,9 +32,9 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 
 	client := fasthttp.Client{
 		NoDefaultUserAgentHeader: true,
-		ReadTimeout:              10 * time.Second,
-		WriteTimeout:             10 * time.Second,
-		MaxConnWaitTimeout:       10 * time.Second,
+		ReadTimeout:              5 * time.Second,
+		WriteTimeout:             5 * time.Second,
+		MaxConnWaitTimeout:       5 * time.Second,
 		MaxResponseBodySize:      5 * 1024 * 1024,
 		ReadBufferSize:           5 * 1024 * 1024,
 	}
@@ -70,6 +72,7 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 	)
 	if err != nil {
 		log.Error().Err(err).Send()
+		err = ErrPutRetryable
 		return
 	}
 	if object.Key == "" {
