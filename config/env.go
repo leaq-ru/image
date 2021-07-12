@@ -32,6 +32,7 @@ type stan struct {
 	ClusterID                string `envconfig:"STAN_CLUSTERID"`
 	SubjectCompanyNew        string `envconfig:"STAN_SUBJECTCOMPANYNEW"`
 	SubjectImageUploadResult string `envconfig:"STAN_SUBJECTIMAGEUPLOADRESULT"`
+	SubjectDeleteImage       string `envconfig:"STAN_SUBJECTDELETEIMAGE"`
 }
 
 type nats struct {

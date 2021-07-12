@@ -17,7 +17,7 @@ import (
 	"time"
 )
 
-var ErrPutRetryable = errors.New("can't put, try later")
+var ErrS3Retryable = errors.New("got err, try later")
 
 func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.PutResponse, err error) {
 	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
@@ -72,7 +72,7 @@ func (s *server) Put(ctx context.Context, req *image.PutRequest) (res *image.Put
 	)
 	if err != nil {
 		log.Error().Err(err).Send()
-		err = ErrPutRetryable
+		err = ErrS3Retryable
 		return
 	}
 	if object.Key == "" {

@@ -30,6 +30,7 @@ func (s *server) Remove(ctx context.Context, req *image.RemoveRequest) (res *emp
 	)
 	if err != nil {
 		logger.Log.Error().Err(err).Send()
+		err = ErrS3Retryable
 		return
 	}
 

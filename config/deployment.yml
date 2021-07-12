@@ -68,10 +68,15 @@ spec:
                 configMapKeyRef:
                   key: subjectcompanynew
                   name: stan
-            - name: STAN_IMAGEUPLOADRESULT
+            - name: STAN_SUBJECTIMAGEUPLOADRESULT
               valueFrom:
                 configMapKeyRef:
                   key: subjectimageuploadresult
+                  name: stan
+            - name: STAN_SUBJECTDELETEIMAGE
+              valueFrom:
+                configMapKeyRef:
+                  key: subjectdeleteimage
                   name: stan
             - name: S3_ALIAS
               valueFrom:

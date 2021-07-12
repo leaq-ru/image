@@ -40,8 +40,18 @@ func main() {
 		stan.Conn,
 		config.Env.STAN.SubjectCompanyNew,
 		config.ServiceName,
-		1,
+		50,
 		img.ConsumeCompanyNew,
+	)
+	logger.Must(err)
+
+	deleteImage, err := stan.NewConsumer(
+		logger.Log,
+		stan.Conn,
+		config.Env.STAN.SubjectDeleteImage,
+		config.ServiceName,
+		50,
+		img.ConsumeDeleteImage,
 	)
 	logger.Must(err)
 
@@ -55,6 +65,10 @@ func main() {
 	})
 	eg.Go(func() error {
 		companyNew.Serve(ctx)
+		return nil
+	})
+	eg.Go(func() error {
+		deleteImage.Serve(ctx)
 		return nil
 	})
 	logger.Must(eg.Wait())

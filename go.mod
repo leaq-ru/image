@@ -14,7 +14,7 @@ require (
 	github.com/nats-io/nats-streaming-server v0.22.0 // indirect
 	github.com/nats-io/stan.go v0.9.0
 	github.com/nnqq/scr-lib-graceful v1.0.0
-	github.com/nnqq/scr-proto v1.23.4
+	github.com/nnqq/scr-proto v1.23.5
 	github.com/rs/zerolog v1.19.0
 	github.com/valyala/fasthttp v1.15.1
 	google.golang.org/grpc v1.31.1
