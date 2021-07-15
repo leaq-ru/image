@@ -40,7 +40,7 @@ func main() {
 		stan.Conn,
 		config.Env.STAN.SubjectCompanyNew,
 		config.ServiceName,
-		50,
+		5,
 		img.ConsumeCompanyNew,
 	)
 	logger.Must(err)
@@ -50,7 +50,7 @@ func main() {
 		stan.Conn,
 		config.Env.STAN.SubjectDeleteImage,
 		config.ServiceName,
-		50,
+		5,
 		img.ConsumeDeleteImage,
 	)
 	logger.Must(err)
