@@ -3,12 +3,12 @@ package imageimpl
 import (
 	"context"
 	"errors"
+	"github.com/leaq-ru/image/config"
+	"github.com/leaq-ru/image/logger"
+	"github.com/leaq-ru/image/stan"
+	"github.com/leaq-ru/proto/codegen/go/event"
+	"github.com/leaq-ru/proto/codegen/go/image"
 	st "github.com/nats-io/stan.go"
-	"github.com/nnqq/scr-image/config"
-	"github.com/nnqq/scr-image/logger"
-	"github.com/nnqq/scr-image/stan"
-	"github.com/nnqq/scr-proto/codegen/go/event"
-	"github.com/nnqq/scr-proto/codegen/go/image"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 

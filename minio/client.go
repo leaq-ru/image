@@ -3,11 +3,11 @@ package minio
 import (
 	"context"
 	"fmt"
+	"github.com/leaq-ru/image/config"
+	"github.com/leaq-ru/image/logger"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/minio/minio-go/v7/pkg/lifecycle"
-	"github.com/nnqq/scr-image/config"
-	"github.com/nnqq/scr-image/logger"
 	"strconv"
 	"time"
 )

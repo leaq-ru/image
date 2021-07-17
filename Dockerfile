@@ -1,12 +1,9 @@
 FROM golang:1.15-alpine AS build
-ARG GH_CI_TOKEN=$GH_CI_TOKEN
 
 RUN apk add git bash pkgconfig vips-dev vips gcc musl-dev
 
 WORKDIR /app
 COPY / /app
-ENV GOPRIVATE="github.com/nnqq/*"
-RUN git config --global url."https://nnqq:$GH_CI_TOKEN@github.com/".insteadOf "https://github.com/"
 RUN CGO_CFLAGS_ALLOW=-Xpreprocessor go build -o servicebin
 
 RUN GRPC_HEALTH_PROBE_VERSION=v0.3.2 && \
