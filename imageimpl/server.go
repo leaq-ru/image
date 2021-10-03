@@ -29,6 +29,11 @@ func (s *server) ConsumeCompanyNew(_m *st.Msg) {
 			}
 		}
 
+		if _m.RedeliveryCount >= 10 {
+			ack()
+			return
+		}
+
 		const (
 			willRetry = "will retry"
 			notRetry  = "not retry"
